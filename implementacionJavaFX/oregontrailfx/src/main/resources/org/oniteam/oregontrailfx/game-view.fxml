@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.oniteam.oregontrailfx.controllers.GameController"
+            onKeyPressed="#onKeyPressed"
+            onKeyReleased="#onKeyReleased">
+
+    <center>
+        <Canvas fx:id="gameCanvas" width="800.0" height="600.0"/>
+    </center>
+
+    <top>
+        <HBox spacing="20.0" style="-fx-padding: 10;">
+            <children>
+                <Label fx:id="lblHealth" text="Vida:"/>
+                <Label fx:id="lblAmmo" text="Balas:"/>
+                <Label fx:id="lblScenario" text="Escenario:"/>
+                <Label fx:id="lblInventorySummary" text="Inventario:"/>
+            </children>
+        </HBox>
+    </top>
+</BorderPane>

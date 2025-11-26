@@ -21,180 +21,147 @@ public class TreeAchivement {
     }
 
     /**
-     * este metodo insertar o agregar en el arbol del jugador de logros
-     *
-     * @param node
+     * Inserta un logro en el árbol del jugador (logros desbloqueados).
      */
     public void insert(NodeAchivement node){
         if(rootPlayer == null){
             rootPlayer = node;
-        }else{
-            if(rootPlayer.getLeft()==null&& rootPlayer.getValue().compareTo(node.getValue())>0){
-                rootPlayer.setLeft(node);
-            }else if(rootPlayer.getRight()==null&& rootPlayer.getValue().compareTo(node.getValue())<0){
-                rootPlayer.setRight(node);
-            }else if(rootPlayer.getLeft()!=null && rootPlayer.getValue().compareTo(node.getValue())>0){
-                insert(rootPlayer.getLeft(), node);
-            }else if(rootPlayer.getRight()!=null && rootPlayer.getValue().compareTo(node.getValue())<0){
-                insert(rootPlayer.getRight(), node);
-            }
-
+        } else {
+            insertRecursive(rootPlayer, node);
         }
     }
 
     /**
-     * descripcion: este es un metodo auxiliar el cual es recursivo y busca donde se puede agregar el nodo
-     * el cual queremos agregar en el arbol, en base a las condiciones de mayor o menor (izquierda y derecha)
-     * @param node
-     * @param current
+     * Método auxiliar recursivo para insertar en el árbol del jugador.
      */
-    private void insert(NodeAchivement node, NodeAchivement current){
+    private void insertRecursive(NodeAchivement current, NodeAchivement node){
         if (current.getValue().compareTo(node.getValue()) > 0){
-            // Caso Base: la izquierda es Null
             if(current.getLeft() == null){
                 current.setLeft(node);
+            } else {
+                insertRecursive(current.getLeft(), node);
             }
-            // Caso Recursivo: Se debe seguir buscando
-            else {
-                insert(current.getLeft(), node);
-            }
-        }
-        // El valor del Node es mayor que el valor del nodo actual (current)
-        // se agrega a la derecha del current
-        else if(current.getValue().compareTo(node.getValue()) < 0){
+        } else if(current.getValue().compareTo(node.getValue()) < 0){
             if(current.getRight() == null){
                 current.setRight(node);
-            }
-            else {
-                insert(current.getRight(), node);
-            }
-        }
-        else {
-            // No agregamos el nodo
-        }
-    }
-
-    /**
-     * descripcion: este metodo busca un nodo que se le fue dado como parametro y primero valida si
-     * la raiz es igual a null o no, si no llama a su metodo auxiliar para encontrar el nodo,
-     * sino lo encuentra retornara un null
-     * @param node
-     * @return
-     */
-    public NodeAchivement search(NodeAchivement node){
-        NodeAchivement foundNode=null;
-        boolean found = false;
-        // Caso Base : is empty tree
-        if(rootPlayer == null){
-            foundNode = null;
-        }
-        // Caso recursivo
-        else{
-            foundNode=search(rootPlayer, node);
-        }
-        return foundNode;
-    }
-
-    /**
-     * descripcion: metodo auxiliar del search recibe el nodo a buscar y el actual donde esta parado
-     * y en basea eso si el current es distinto de null, hace las correspondientes verificaciones y en base a eso
-     * se hace un llamado o no
-     * @param current
-     * @param element
-     * @return
-     */
-    private NodeAchivement search(NodeAchivement current, NodeAchivement element){
-        NodeAchivement found = null;
-        if(current != null){
-            if (current.getValue().getDifficulty() == element.getValue().getDifficulty()){
-                found = current;
-            }
-            else if(current.getValue().compareTo(element.getValue()) > 0){
-                found = search(current.getLeft(), element);
-            }
-            else if (current.getValue().compareTo(element.getValue()) < 0){
-                found = search(current.getRight(), element);
+            } else {
+                insertRecursive(current.getRight(), node);
             }
         }
-
-        return found;
     }
 
     /**
-     * descripcion utiliza el algoritmo recursivo inorder para asi
-     * retornar en String cocatenado la informacion de los nodos
-     * @return
-     */
-    public String inOrder(){
-        String msj = "";
-
-        if (rootPlayer != null){
-            msj = inOrder(rootPlayer);
-        }
-        else {
-            msj = "el arbol de logros del jugador esta vacio";
-        }
-        return msj;
-    }
-
-    /**
-     * descripcion: metodo auxiliar para el algoritmo de recorrido inorder
-     * @param curent
-     * @return
-     */
-    private String inOrder(NodeAchivement curent){
-        // Caso recursio
-        if(curent != null){
-            // Recorrido por izquerda           |   Valor actual          |     Recorrido por derecha
-            return inOrder(curent.getLeft()) + " " + curent.getValue().toString() + " " + inOrder(curent.getRight());
-        }
-        // Caso base
-        else {
-            return "";
-        }
-    }
-
-    /**
-     * descripcion: printear el arbol con inorder pero con la raiz de todos los logros
-     * posibles
-     * @return
-     */
-    public String inordenRootAllAchivements(){
-        String msj = "";
-        if (rootAllAchivements != null){
-            msj=inOrder(rootAllAchivements);
-        }else{
-            msj = "el arbol de logros esta vacio";
-        }
-        return msj;
-    }
-
-    /**
-     * descripcion metodo intertar pero para este caso sera para la raiz de todos los logros
-     * @param node
+     * ✅ FIX: Inserta un logro en el árbol de TODOS los logros disponibles.
+     * Ahora usa insertInAllAchivementRecursive() en vez de insert().
      */
     public void insertInAllAchivement(NodeAchivement node){
         if(rootAllAchivements == null){
             rootAllAchivements = node;
-        }else{
-            if(rootAllAchivements.getLeft()==null&& rootAllAchivements.getValue().compareTo(node.getValue())>0){
-                rootAllAchivements.setLeft(node);
-            }else if(rootAllAchivements.getRight()==null&& rootAllAchivements.getValue().compareTo(node.getValue())<0){
-                rootAllAchivements.setRight(node);
-            }else if(rootAllAchivements.getLeft()!=null && rootAllAchivements.getValue().compareTo(node.getValue())>0){
-                insert(rootAllAchivements.getLeft(), node);
-            }else if(rootAllAchivements.getRight()!=null && rootAllAchivements.getValue().compareTo(node.getValue())<0){
-                insert(rootAllAchivements.getRight(), node);
-            }
-
+        } else {
+            insertInAllAchivementRecursive(rootAllAchivements, node);
         }
     }
 
+    /**
+     * ✅ FIX: Método auxiliar recursivo para insertar en rootAllAchivements.
+     * Antes llamaba a insert() que insertaba en rootPlayer (BUG).
+     */
+    private void insertInAllAchivementRecursive(NodeAchivement current, NodeAchivement node){
+        if (current.getValue().compareTo(node.getValue()) > 0){
+            if(current.getLeft() == null){
+                current.setLeft(node);
+            } else {
+                insertInAllAchivementRecursive(current.getLeft(), node);
+            }
+        } else if(current.getValue().compareTo(node.getValue()) < 0){
+            if(current.getRight() == null){
+                current.setRight(node);
+            } else {
+                insertInAllAchivementRecursive(current.getRight(), node);
+            }
+        }
+    }
 
+    /**
+     * Busca un logro en el árbol del jugador.
+     */
+    public NodeAchivement search(NodeAchivement node){
+        if(rootPlayer == null){
+            return null;
+        }
+        return searchRecursive(rootPlayer, node);
+    }
 
+    /**
+     * Método auxiliar recursivo para búsqueda en el árbol del jugador.
+     */
+    private NodeAchivement searchRecursive(NodeAchivement current, NodeAchivement element){
+        if(current == null){
+            return null;
+        }
 
+        if (current.getValue().getDifficulty() == element.getValue().getDifficulty()){
+            return current;
+        } else if(current.getValue().compareTo(element.getValue()) > 0){
+            return searchRecursive(current.getLeft(), element);
+        } else {
+            return searchRecursive(current.getRight(), element);
+        }
+    }
 
+    /**
+     * Recorrido InOrder del árbol del jugador (logros desbloqueados).
+     */
+    public String inOrder(){
+        if (rootPlayer == null){
+            return "El árbol de logros del jugador está vacío";
+        }
+        return inOrderRecursive(rootPlayer);
+    }
 
+    /**
+     * Método auxiliar recursivo para InOrder.
+     */
+    private String inOrderRecursive(NodeAchivement current){
+        if(current == null){
+            return "";
+        }
+        return inOrderRecursive(current.getLeft()) + " " +
+                current.getValue().toString() + " " +
+                inOrderRecursive(current.getRight());
+    }
 
+    /**
+     * Recorrido InOrder del árbol de TODOS los logros disponibles.
+     */
+    public String inordenRootAllAchivements(){
+        if (rootAllAchivements == null){
+            return "El árbol de todos los logros está vacío";
+        }
+        return inOrderRecursive(rootAllAchivements);
+    }
 
+    /**
+     * Cuenta cuántos logros ha desbloqueado el jugador.
+     */
+    public int countPlayerAchivements(){
+        return countNodes(rootPlayer);
+    }
+
+    /**
+     * Cuenta el total de logros disponibles en el juego.
+     */
+    public int countAllAchivements(){
+        return countNodes(rootAllAchivements);
+    }
+
+    /**
+     * Método auxiliar recursivo para contar nodos.
+     */
+    private int countNodes(NodeAchivement node){
+        if(node == null){
+            return 0;
+        }
+        return 1 + countNodes(node.getLeft()) + countNodes(node.getRight());
+    }
 }

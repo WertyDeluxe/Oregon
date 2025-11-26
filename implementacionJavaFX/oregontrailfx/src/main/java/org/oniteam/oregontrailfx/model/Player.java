@@ -1,8 +1,10 @@
 package org.oniteam.oregontrailfx.model;
 
-import javafx.scene.input.KeyEvent;
-
-public class Player extends Thread{
+/**
+ * ✅ FIX: Player ahora implementa correctamente Thread con run()
+ * para animaciones de regeneración de salud o efectos visuales.
+ */
+public class Player extends Thread {
 
     private int x;
     private int y;
@@ -11,10 +13,13 @@ public class Player extends Thread{
     private String nombre;
     private String profesion;
     private double dinero;
+    private int currentAmmo; // Munición actual del arma equipada
 
+    // Control de animación
+    private boolean running = true;
+    private volatile boolean pausado = false;
 
-
-    public Player(int x, int y, int vida,double anchoCanvas, double altoCanvas){
+    public Player(int x, int y, int vida, double anchoCanvas, double altoCanvas){
         this.x = x;
         this.y = y;
         this.vida = vida;
@@ -22,6 +27,7 @@ public class Player extends Thread{
         this.nombre = null;
         this.profesion = null;
         this.dinero = 0.0;
+        this.currentAmmo = 0;
     }
 
     public Player(double hearts){
@@ -32,6 +38,7 @@ public class Player extends Thread{
         this.nombre = null;
         this.profesion = null;
         this.dinero = 0.0;
+        this.currentAmmo = 0;
     }
 
     public Player(String nombre, String profesion, int x, int y, int vida) {
@@ -42,13 +49,62 @@ public class Player extends Thread{
         this.vida = vida;
         this.hearts = vida;
         this.dinero = calcularDineroInicial(profesion);
+        this.currentAmmo = 0;
     }
 
     public Player(String nombre, String profesion) {
         this(nombre, profesion, 0, 0, 3);
     }
 
+    /**
+     * ✅ FIX: Implementación del método run() para animaciones.
+     * Este hilo puede usarse para:
+     * - Regeneración gradual de salud
+     * - Efectos visuales de daño
+     * - Animaciones de movimiento suave
+     */
+    @Override
+    public void run() {
+        System.out.println("Hilo de animación del jugador iniciado");
 
+        while (running && vida > 0) {
+            try {
+                if (!pausado) {
+                    // Regeneración muy lenta de salud (1 punto cada 30 segundos)
+                    if (hearts < vida && hearts < 3) {
+                        hearts += 0.01; // Regeneración gradual
+                        if (hearts > vida) {
+                            hearts = vida;
+                        }
+                    }
+                }
+
+                Thread.sleep(100); // Actualizar cada 100ms
+
+            } catch (InterruptedException e) {
+                System.out.println("Hilo de jugador interrumpido");
+                break;
+            }
+        }
+
+        System.out.println("Hilo de animación del jugador terminado");
+    }
+
+    /**
+     * Detiene el hilo de animación.
+     */
+    public void stopAnimation() {
+        running = false;
+    }
+
+    /**
+     * Pausa/reanuda las animaciones.
+     */
+    public void setPausado(boolean pausado) {
+        this.pausado = pausado;
+    }
+
+    // ========== GETTERS Y SETTERS ==========
 
     public int getX() {
         return x;
@@ -79,6 +135,15 @@ public class Player extends Thread{
         this.y = ny;
     }
 
+    public Vec2 getPosition(){
+        return new Vec2(x, y);
+    }
+
+    public void setPosition(Vec2 pos){
+        this.x = (int)pos.getX();
+        this.y = (int)pos.getY();
+    }
+
     public int getVida(){
         return vida;
     }
@@ -95,14 +160,20 @@ public class Player extends Thread{
     public void heal(double h){
         hearts += Math.max(0, h);
         vida = (int)Math.round(hearts);
+        if (vida > 3) vida = 3; // Límite máximo de vida
+        if (hearts > 3) hearts = 3.0;
+    }
+
+    public int getCurrentAmmo() {
+        return currentAmmo;
+    }
+
+    public void setCurrentAmmo(int ammo) {
+        this.currentAmmo = Math.max(0, ammo);
     }
 
     /**
-     * Metodo: calcularDineroInicial
      * Calcula el dinero inicial según la profesión.
-     *
-     * @param profesion La profesión del jugador
-     * @return Dinero inicial
      */
     private double calcularDineroInicial(String profesion) {
         if (profesion == null) {
@@ -144,48 +215,22 @@ public class Player extends Thread{
         this.dinero = Math.max(0, dinero);
     }
 
-    /**
-     * Metodo: tienePerfilCompleto
-     * Verifica si el jugador tiene un perfil completo (nombre y profesión).
-     *
-     * @return true si tiene nombre y profesión asignados
-     */
     public boolean tienePerfilCompleto() {
         return nombre != null && profesion != null;
     }
 
-    /**
-     * Metodo: inicializarPerfil
-     * Inicializa el perfil del jugador con nombre y profesión.
-     * cuando se crea el jugador para combate y luego se le asigna identidad.
-     *
-     * @param nombre Nombre del jugador
-     * @param profesion Profesión elegida
-     */
     public void inicializarPerfil(String nombre, String profesion) {
         this.nombre = nombre;
         this.profesion = profesion;
         this.dinero = calcularDineroInicial(profesion);
     }
 
-    /**
-     * Metodo:agregarDinero
-     * Añade dinero al jugador.
-     *
-     * @param cantidad Cantidad a añadir
-     */
     public void agregarDinero(double cantidad) {
         if (cantidad > 0) {
             this.dinero += cantidad;
         }
     }
 
-    /**
-     * Metodo: Gasta dinero
-     *
-     * @param cantidad Cantidad a gastar
-     * @return true si tenía suficiente dinero
-     */
     public boolean gastarDinero(double cantidad) {
         if (cantidad <= 0 || cantidad > dinero) {
             return false;
@@ -194,13 +239,6 @@ public class Player extends Thread{
         return true;
     }
 
-    /**
-     * Metodo: puedePagar
-     * Verifica si el jugador puede pagar una cantidad.
-     *
-     * @param cantidad Cantidad a verificar
-     * @return true si tiene suficiente dinero
-     */
     public boolean puedePagar(double cantidad) {
         return dinero >= cantidad;
     }
@@ -209,7 +247,6 @@ public class Player extends Thread{
     public String toString() {
         StringBuilder sb = new StringBuilder("Player{");
 
-        // Muestra perfil si existe
         if (nombre != null) {
             sb.append("nombre='").append(nombre).append('\'');
         }
@@ -222,7 +259,6 @@ public class Player extends Thread{
             sb.append("dinero=").append(String.format("%.2f", dinero));
         }
 
-        // Siempre mostrar posición y vida
         if (nombre != null || profesion != null || dinero > 0) sb.append(", ");
         sb.append("pos=(").append(x).append(",").append(y).append(")");
         sb.append(", vida=").append(vida);
@@ -231,105 +267,3 @@ public class Player extends Thread{
         return sb.toString();
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

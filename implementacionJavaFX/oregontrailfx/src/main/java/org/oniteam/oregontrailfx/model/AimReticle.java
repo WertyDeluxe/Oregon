@@ -4,8 +4,8 @@ public class AimReticle {
     private int x, y;
 
     public void update(Vec2 mousePos){
-        this.x = mousePos.getX();
-        this.y = mousePos.getY();
+        this.x = (int)mousePos.getX();
+        this.y = (int) mousePos.getY();
     }
 
     public int getX() {

@@ -5,11 +5,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class Main extends Application {
+public class  Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/oniteam/oregontrailfx/hello-view.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/oniteam/oregontrailfx/game-view.fxml"));
             Parent root = loader.load();
             Scene scene = new Scene(root, 900, 700);
             primaryStage.setTitle("The Oregon Trail");

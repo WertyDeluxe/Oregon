@@ -4,13 +4,17 @@ import java.util.Random;
 public class Spawner {
     private ListEnemy enemies;
     private int densidadMax;
-    private  int radioSeguro;
+    private int radioSeguro;
     private Random random;
 
+    /**
+     * Constructor corregido: inicializa enemies para evitar NullPointerException
+     */
     public Spawner(int densidadMax, int radioSeguro) {
         this.densidadMax = densidadMax;
         this.radioSeguro = radioSeguro;
         this.random = new Random();
+        this.enemies = new ListEnemy(); // ✅ FIX: Inicializar lista de enemigos
     }
 
     public ListEnemy getEnemies() {
@@ -38,51 +42,45 @@ public class Spawner {
     }
 
     /**
-     * este metodo sirve para primero validar si la cantidad maxima de enemigos es menor o igual
-     * a densidad o cantidad maxima de enemigos, si no es asi, pasa a bucar una pos que sea valida
-     * con el radio seguro y la densidad maxima
-     * @param map el escenario el cual esta el jugador actualmente
-     * @param p el player o el jugador
+     * Genera enemigos respetando densidad máxima y radio seguro del jugador.
+     *
+     * @param map el escenario actual
+     * @param p el jugador
      */
     public void tickSpawn(Scenario map, Player p){
-        densidadMax=map.getCantMaxRespawnEnemies();
+        densidadMax = map.getCantMaxRespawnEnemies();
+
         if (enemies.contEnemies() >= densidadMax) {
             return;
         }
 
-        // buscar una celda válida en ese mapa
         SpawnPos pos = findValidPosition(map, p);
         if (pos == null) {
-            return; // no hubo dónde
+            return;
         }
 
-        // crear y guardar en la lista enlazada interna
         Enemy e = new Enemy(pos.getPosX(), pos.getPosY());
-        enemies.addEnemy(e); // o addLast, según tu lista
+        enemies.addEnemy(e);
     }
 
     /**
-     * este metodo sirve para validar si luego de que el random haya dado un valor cualquiera, es decir
-     * , las posiciones x,y,  valide si  esta fuera del rango seguro,  y si esta fuera pues crea
-     * la nueva pos con la clase spawnpos y retorna ese nuevo objecto
-     * @param map
-     * @param player
-     * @return
+     * Busca una posición válida fuera del radio seguro del jugador.
+     *
+     * @param map escenario actual
+     * @param player jugador
+     * @return posición válida o null si no encuentra en 30 intentos
      */
     private SpawnPos findValidPosition(Scenario map, Player player) {
         int intentos = 30;
         int width = map.getBoard().length;
-        int height = map.getBoard().length;
+        int height = map.getBoard()[0].length; // ✅ FIX: usar [0] para altura
 
         for (int i = 0; i < intentos; i++) {
             int x = random.nextInt(width);
             int y = random.nextInt(height);
 
-
-
-            // está dentro del radio seguro -> no sirve
             if (!isOutsideSafeRadius(x, y, player)) {
-                continue; // esto sirve para pasar a la siguiente iteracion, y sola la salta si esas posiciones estan fuera del rango seguro del jugador
+                continue;
             }
 
             return new SpawnPos(x, y);
@@ -91,6 +89,9 @@ public class Spawner {
         return null;
     }
 
+    /**
+     * Verifica si una posición está fuera del radio seguro del jugador.
+     */
     public boolean isOutsideSafeRadius(int x, int y, Player p) {
         int dx = x - p.getX();
         int dy = y - p.getY();

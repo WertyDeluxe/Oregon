@@ -43,7 +43,7 @@ public class MovementController {
         }
     }
     public void movePlayer(Player player, Vec2 direction, Scenario scenario) {
-        player.setPosition(new Vec2(player.getPosition().getX() + direction.getX(),
-                player.getPosition().getY() + direction.getY()));
+        player.setPosition(new Vec2((int) (player.getPosition().getX() + direction.getX()),
+                (int) (player.getPosition().getY() + direction.getY())));
     }
 }

@@ -1,15 +1,15 @@
 package org.oniteam.oregontrailfx.model;
 
 public class Vec2 {
-    private double x;
-    private double y;
+    private int x;
+    private int y;
 
-    public Vec2(double x, double y) {
+    public Vec2(int x, int y) {
         this.x = x;
         this.y = y;
     }
 
-    public Vec2 add(double dx, double dy) {
+    public Vec2 add(int dx, int dy) {
         return new Vec2(this.x + dx, this.y + dy);
     }
 
@@ -21,11 +21,11 @@ public class Vec2 {
         return y;
     }
 
-    public void setX(double x) {
+    public void setX(int x) {
         this.x = x;
     }
 
-    public void setY(double y) {
+    public void setY(int y) {
         this.y = y;
     }
 

@@ -1,14 +1,100 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="org.oniteam.oregontrailfx.controllers.AchievementController"
-            prefHeight="400.0" prefWidth="600.0">
+<VBox fx:id="rootVBox" xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.oniteam.oregontrailfx.controllers.AchievementController"
+      prefHeight="700.0" prefWidth="900.0"
+      style="-fx-background-color: linear-gradient(to bottom, #8e44ad, #9b59b6);"
+      spacing="15.0">
 
-</AnchorPane>
+    <padding>
+        <Insets top="20.0" right="30.0" bottom="20.0" left="30.0"/>
+    </padding>
+
+    <!-- Título -->
+    <Label fx:id="lblTitulo" text="🏆 ÁRBOL DE LOGROS" textFill="WHITE" alignment="CENTER">
+        <font>
+            <Font name="Arial Bold" size="42.0"/>
+        </font>
+        <VBox.margin>
+            <Insets bottom="10.0"/>
+        </VBox.margin>
+    </Label>
+
+    <!-- Estadísticas -->
+    <Label fx:id="lblEstadisticas" text="Progreso: 0/0 logros (0.0%)"
+           textFill="#ecf0f1" alignment="CENTER">
+        <font>
+            <Font name="Arial" size="16.0"/>
+        </font>
+    </Label>
+
+    <Separator style="-fx-background-color: white;"/>
+
+    <!-- Panel de logros desbloqueados -->
+    <VBox spacing="10.0">
+        <Label text="✨ LOGROS DESBLOQUEADOS" textFill="#f1c40f">
+            <font>
+                <Font name="Arial Bold" size="18.0"/>
+            </font>
+        </Label>
+
+        <TextArea fx:id="txtLogrosDesbloqueados"
+                  prefHeight="220.0"
+                  wrapText="true"
+                  editable="false"
+                  style="-fx-control-inner-background: #2c3e50; -fx-text-fill: white; -fx-font-size: 13px;"/>
+    </VBox>
+
+    <Separator style="-fx-background-color: white;"/>
+
+    <!-- Panel de todos los logros -->
+    <VBox spacing="10.0">
+        <Label text="📜 TODOS LOS LOGROS DISPONIBLES" textFill="#ecf0f1">
+            <font>
+                <Font name="Arial Bold" size="18.0"/>
+            </font>
+        </Label>
+
+        <TextArea fx:id="txtTodosLosLogros"
+                  prefHeight="220.0"
+                  wrapText="true"
+                  editable="false"
+                  style="-fx-control-inner-background: #34495e; -fx-text-fill: #bdc3c7; -fx-font-size: 12px;"/>
+    </VBox>
+
+    <!-- Botones de acción -->
+    <HBox spacing="15.0" alignment="CENTER">
+        <Button text="🔄 Actualizar" onAction="#handleActualizar"
+                style="-fx-background-color: #3498db; -fx-text-fill: white;"
+                prefWidth="150.0" prefHeight="45.0">
+            <font><Font size="14.0"/></font>
+        </Button>
+
+        <Button text="🎮 Simular Logro" onAction="#handleSimularLogro"
+                style="-fx-background-color: #f39c12; -fx-text-fill: white;"
+                prefWidth="150.0" prefHeight="45.0">
+            <font><Font size="14.0"/></font>
+        </Button>
+
+        <Button text="❌ Cerrar" onAction="#handleCerrar"
+                style="-fx-background-color: #e74c3c; -fx-text-fill: white;"
+                prefWidth="150.0" prefHeight="45.0">
+            <font><Font size="14.0"/></font>
+        </Button>
+    </HBox>
+
+    <!-- Footer -->
+    <Label text="💡 Los logros se desbloquean automáticamente al cumplir ciertos objetivos en el juego"
+           textFill="#ecf0f1" alignment="CENTER" wrapText="true">
+        <font>
+            <Font size="11.0"/>
+        </font>
+    </Label>
+
+</VBox>

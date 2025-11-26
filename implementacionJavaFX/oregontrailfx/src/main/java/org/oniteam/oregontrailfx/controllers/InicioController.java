@@ -18,17 +18,20 @@ public class InicioController {
 
     @FXML
     private void handleInstrucciones() {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Instrucciones");
-        alert.setHeaderText("Cómo Jugar Oregon Trail");
-        alert.setContentText("1. Elige tu profesión y nombra a tu familia\n" +
-                "2. Compra suministros en la tienda\n" +
-                "3. Viaja 2000 millas hasta Oregón\n" +
-                "4. Gestiona tus recursos\n" +
-                "5. Caza para conseguir comida\n" +
-                "6. Enfrenta eventos aleatorios\n\n" +
-                "¡Buena suerte en tu viaje!");
-        alert.showAndWait();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/oniteam/oregontrailfx/achievements.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle("Árbol de Logros");
+            stage.setScene(new Scene(root, 900, 700));
+            stage.setResizable(false);
+            stage.show();
+
+        } catch (Exception e) {
+            System.err.println(" Error abriendo logros desde menú");
+            e.printStackTrace();
+        }
     }
 
     @FXML

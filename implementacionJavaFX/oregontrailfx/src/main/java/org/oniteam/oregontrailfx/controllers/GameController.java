@@ -80,7 +80,7 @@ public class GameController {
         javafx.application.Platform.runLater(() -> {
             gameCanvas.setFocusTraversable(true);
             gameCanvas.requestFocus();
-            System.out.println("✅ Canvas tiene focus - Presiona WASD para mover");
+            System.out.println("✅ Canvas tiene focus - Presiona WASD para mover | I para inventario | L para logros");
         });
     }
 
@@ -234,6 +234,7 @@ public class GameController {
             case D, RIGHT -> right = true;
             case SPACE -> shooting = true;
             case I -> abrirInventario();
+            case L -> abrirLogros();
             case ESCAPE -> pausarJuego();
         }
     }
@@ -365,13 +366,97 @@ public class GameController {
         }
     }
 
+    /**
+     * Abre la ventana del inventario en una nueva Stage (ventana modal).
+     */
     private void abrirInventario() {
-        System.out.println("Abriendo inventario...");
+        try {
+            System.out.println("🎒 Abriendo inventario...");
+
+            // Pausar el juego mientras está abierto el inventario
+            loop.stop();
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/oniteam/oregontrailfx/inventory-view.fxml"));
+            Parent root = loader.load();
+
+            // Pasar el inventario al controlador si es necesario
+            // InventoryController controller = loader.getController();
+            // controller.setInventory(this.inventory);
+
+            Stage inventoryStage = new Stage();
+            inventoryStage.setTitle("Inventario del Jugador");
+            inventoryStage.setScene(new Scene(root, 800, 600));
+            inventoryStage.setResizable(false);
+
+            // Al cerrar el inventario, reanudar el juego
+            inventoryStage.setOnHidden(e -> {
+                loop.start();
+                gameCanvas.requestFocus();
+                System.out.println("🎮 Juego reanudado");
+            });
+
+            inventoryStage.show();
+
+        } catch (Exception e) {
+            System.err.println("❌ Error abriendo inventario");
+            e.printStackTrace();
+            loop.start(); // Asegurar que el juego continúe
+        }
+    }
+
+    /**
+     * Abre la ventana del árbol de logros en una nueva Stage (ventana modal).
+     */
+    private void abrirLogros() {
+        try {
+            System.out.println("🏆 Abriendo árbol de logros...");
+
+            // Pausar el juego
+            loop.stop();
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/oniteam/oregontrailfx/achievement-view.fxml"));
+            Parent root = loader.load();
+
+            Stage achievementsStage = new Stage();
+            achievementsStage.setTitle("Árbol de Logros");
+            achievementsStage.setScene(new Scene(root, 900, 700));
+            achievementsStage.setResizable(false);
+
+            // Al cerrar, reanudar el juego
+            achievementsStage.setOnHidden(e -> {
+                loop.start();
+                gameCanvas.requestFocus();
+                System.out.println("🎮 Juego reanudado");
+            });
+
+            achievementsStage.show();
+
+        } catch (Exception e) {
+            System.err.println("❌ Error abriendo árbol de logros");
+            e.printStackTrace();
+            loop.start();
+        }
     }
 
     private void pausarJuego() {
         loop.stop();
-        System.out.println("Juego pausado");
+        System.out.println("⏸️ Juego pausado - Presiona ESC para reanudar");
+
+        // Crear un pequeño diálogo de pausa
+        javafx.scene.control.Alert pauseAlert = new javafx.scene.control.Alert(
+                javafx.scene.control.Alert.AlertType.INFORMATION
+        );
+        pauseAlert.setTitle("Pausa");
+        pauseAlert.setHeaderText("Juego Pausado");
+        pauseAlert.setContentText("Presiona OK para continuar");
+
+        pauseAlert.setOnHidden(e -> {
+            loop.start();
+            gameCanvas.requestFocus();
+            System.out.println("▶️ Juego reanudado");
+        });
+
+        pauseAlert.show();
     }
 
     private void gameOver() {
@@ -400,3 +485,4 @@ public class GameController {
         }
     }
 }
+

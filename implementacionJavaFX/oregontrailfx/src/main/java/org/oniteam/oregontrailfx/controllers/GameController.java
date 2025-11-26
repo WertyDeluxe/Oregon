@@ -36,6 +36,15 @@ public class GameController {
     // Estados de entrada
     private boolean up, down, left, right, shooting;
 
+    // ⭐ CONTROL DE VELOCIDAD DE MOVIMIENTO (OREGON TRAIL CLÁSICO)
+    private long lastMoveTime = 0;
+    private long moveDelayNanos = 150_000_000L; // 150ms entre movimientos
+
+    // ⭐ LÍMITES DEL CANVAS (para colisiones)
+    private final int TILE_SIZE = 32; // Tamaño de cada celda en píxeles
+    private int maxTilesX; // Calculado según el ancho del canvas
+    private int maxTilesY; // Calculado según el alto del canvas
+
     // Sprites
     private Image[] heroIdle;
     private Image[] heroRun;
@@ -56,9 +65,23 @@ public class GameController {
     @FXML
     private void initialize() {
         gc = gameCanvas.getGraphicsContext2D();
+
+        // ⭐ Calcular límites del canvas
+        maxTilesX = (int) (gameCanvas.getWidth() / TILE_SIZE);
+        maxTilesY = (int) (gameCanvas.getHeight() / TILE_SIZE);
+
+        System.out.println("🗺️ Límites del mapa: " + maxTilesX + "x" + maxTilesY + " celdas");
+
         loadSprites();
         initModel();
         initLoop();
+
+        // ✅ Dar focus al canvas DESPUÉS de inicializar
+        javafx.application.Platform.runLater(() -> {
+            gameCanvas.setFocusTraversable(true);
+            gameCanvas.requestFocus();
+            System.out.println("✅ Canvas tiene focus - Presiona WASD para mover");
+        });
     }
 
     private void loadSprites() {
@@ -154,8 +177,15 @@ public class GameController {
 
         // Si player es null, crear uno por defecto
         if (player == null) {
-            player = new Player("Viajero", "Carpintero");
+            player = new Player("Viajero", "Carpintero", 5, 5, 3);
             gameManager.setJugador(player);
+            System.out.println("⚠️ Jugador creado por defecto en GameController");
+        } else {
+            // ✅ FORZAR posición inicial si está en (0,0)
+            if (player.getX() == 0 && player.getY() == 0) {
+                player.setPosition(5, 5);
+                System.out.println("⚠️ Posición del jugador corregida a (5, 5)");
+            }
         }
 
         // Inicializar escenario
@@ -178,8 +208,10 @@ public class GameController {
         spawner = new Spawner(5, 3);
         enemies = spawner.getEnemies();
 
-        // Controlador de movimiento
-        movementController = new MovementController(currentMap, player, currentScenario);
+        // ✅ Controlador de movimiento con límites del canvas
+        movementController = new MovementController(currentMap, player, maxTilesX, maxTilesY);
+
+        System.out.println("✅ Modelo inicializado - Jugador: " + player.getNombre() + " en posición: (" + player.getX() + ", " + player.getY() + ")");
     }
 
     private void initLoop() {
@@ -229,16 +261,32 @@ public class GameController {
             return;
         }
 
-        // Movimiento del jugador
-        if (up) movementController.moveUp();
-        if (down) movementController.moveDown();
-        if (left) movementController.moveLeft();
-        if (right) movementController.moveRight();
+        // ⭐ MOVIMIENTO CON COOLDOWN (ESTILO OREGON TRAIL CLÁSICO)
+        if (now - lastMoveTime > moveDelayNanos) {
+            boolean moved = false;
+
+            if (up) {
+                movementController.moveUp();
+                moved = true;
+            } else if (down) {
+                movementController.moveDown();
+                moved = true;
+            } else if (left) {
+                movementController.moveLeft();
+                moved = true;
+            } else if (right) {
+                movementController.moveRight();
+                moved = true;
+            }
+
+            if (moved) {
+                lastMoveTime = now; // Actualizar tiempo del último movimiento
+            }
+        }
 
         // Disparo
         if (shooting && ammoManager.hasAmmo("rifle")) {
             ammoManager.shoot("rifle");
-            // Aquí podrías agregar lógica de colisión con enemigos
         }
 
         // Spawn de enemigos
@@ -302,7 +350,7 @@ public class GameController {
         while (current != null) {
             Enemy e = current.getData();
             if (enemyImg != null) {
-                gc.drawImage(enemyImg, e.getX() * 32, e.getY() * 32, 32, 32);
+                gc.drawImage(enemyImg, e.getX() * TILE_SIZE, e.getY() * TILE_SIZE, 32, 32);
             }
             current = current.getNext();
         }
@@ -313,31 +361,29 @@ public class GameController {
                 : heroIdle[heroFrame % heroIdle.length];
 
         if (sprite != null) {
-            gc.drawImage(sprite, player.getX() * 32, player.getY() * 32, 48, 48);
+            gc.drawImage(sprite, player.getX() * TILE_SIZE, player.getY() * TILE_SIZE, 48, 48);
         }
     }
 
     private void abrirInventario() {
-        // TODO: Abrir ventana de inventario
         System.out.println("Abriendo inventario...");
     }
 
     private void pausarJuego() {
         loop.stop();
-        // TODO: Mostrar menú de pausa
         System.out.println("Juego pausado");
     }
 
     private void gameOver() {
         loop.stop();
         gameManager.terminarJuego(false);
-        cargarVista("/views/gameover.fxml", "Game Over");
+        cargarVista("/org/oniteam/oregontrailfx/gameover.fxml", "Game Over");
     }
 
     private void victoria() {
         loop.stop();
         gameManager.terminarJuego(true);
-        cargarVista("/views/victoria.fxml", "¡Victoria!");
+        cargarVista("/org/oniteam/oregontrailfx/victoria.fxml", "¡Victoria!");
     }
 
     private void cargarVista(String fxml, String titulo) {
@@ -349,7 +395,7 @@ public class GameController {
             stage.setTitle(titulo);
             stage.setScene(scene);
         } catch (Exception e) {
-            System.err.println("Error cargando vista: " + fxml);
+            System.err.println("❌ Error cargando vista: " + fxml);
             e.printStackTrace();
         }
     }

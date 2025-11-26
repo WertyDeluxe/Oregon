@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.oniteam.oregontrailfx.controllers.InicioController"
+            prefHeight="700.0" prefWidth="900.0"
+            style="-fx-background-color: linear-gradient(to bottom, #2c3e50, #34495e);">
+
+    <!-- Título -->
+    <Label text="THE OREGON TRAIL" layoutX="200.0" layoutY="100.0" textFill="WHITE">
+        <font>
+            <Font name="System Bold" size="48.0"/>
+        </font>
+    </Label>
+
+    <Label text="Survival Edition" layoutX="330.0" layoutY="170.0" textFill="#ecf0f1">
+        <font>
+            <Font name="System Italic" size="24.0"/>
+        </font>
+    </Label>
+
+    <!-- Botón Jugar -->
+    <Button text="▶ JUGAR" layoutX="300.0" layoutY="280.0" prefWidth="300.0" prefHeight="60.0"
+            onAction="#handleComenzar"
+            style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold; -fx-background-radius: 10px;"/>
+
+    <!-- Botón Instrucciones -->
+    <Button text="📖 INSTRUCCIONES" layoutX="300.0" layoutY="360.0" prefWidth="300.0" prefHeight="60.0"
+            onAction="#handleInstrucciones"
+            style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold; -fx-background-radius: 10px;"/>
+
+    <!-- Botón Salir -->
+    <Button text="❌ SALIR" layoutX="300.0" layoutY="440.0" prefWidth="300.0" prefHeight="60.0"
+            onAction="#handleSalir"
+            style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold; -fx-background-radius: 10px;"/>
+
+    <!-- Footer -->
+    <Label text="ICESI - Algoritmos y Programación II" layoutX="290.0" layoutY="620.0" textFill="#bdc3c7">
+        <font>
+            <Font size="12.0"/>
+        </font>
+    </Label>
+
+    <Label text="Tarea Integradora 2025-2" layoutX="360.0" layoutY="645.0" textFill="#95a5a6">
+        <font>
+            <Font size="10.0"/>
+        </font>
+    </Label>
+
+</AnchorPane>

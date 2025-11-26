@@ -242,4 +242,23 @@ public class GeminiService {
     public boolean isConfigured() {
         return config.isGeminiConfigured();
     }
+
+
+    /**
+     * Obtiene un mensaje explicativo sobre la configuración de Gemini.
+     */
+    public String getMensajeConfiguracion() {
+        if (!config.isGeminiConfigured()) {
+            return "⚠️ API Key de Gemini no configurada.\n\n" +
+                    "Para usar diálogos con IA:\n" +
+                    "1. Obtén tu API Key en: https://makersuite.google.com/app/apikey\n" +
+                    "2. Edita el archivo: src/main/resources/config.properties\n" +
+                    "3. Reemplaza TU_API_KEY_AQUI con tu clave real\n" +
+                    "4. Reinicia la aplicación";
+        }
+        return "✅ Gemini API configurada correctamente";
+    }
+
+
+
 }

@@ -1,4 +1,5 @@
 package org.oniteam.oregontrailfx.controllers;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,7 +13,7 @@ public class InicioController {
 
     @FXML
     private void handleComenzar(ActionEvent event) {
-        cargarVista("/views/configuracion.fxml", "Configuración", event);
+        cargarVista("/org/oniteam/oregontrailfx/configuracion.fxml", "Configuración", event);
     }
 
     @FXML

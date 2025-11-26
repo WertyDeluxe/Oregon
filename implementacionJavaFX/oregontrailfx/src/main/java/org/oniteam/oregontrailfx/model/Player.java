@@ -1,9 +1,5 @@
 package org.oniteam.oregontrailfx.model;
 
-/**
- * ✅ FIX: Player ahora implementa correctamente Thread con run()
- * para animaciones de regeneración de salud o efectos visuales.
- */
 public class Player extends Thread {
 
     private int x;
@@ -56,13 +52,6 @@ public class Player extends Thread {
         this(nombre, profesion, 0, 0, 3);
     }
 
-    /**
-     * ✅ FIX: Implementación del método run() para animaciones.
-     * Este hilo puede usarse para:
-     * - Regeneración gradual de salud
-     * - Efectos visuales de daño
-     * - Animaciones de movimiento suave
-     */
     @Override
     public void run() {
         System.out.println("Hilo de animación del jugador iniciado");
@@ -79,7 +68,7 @@ public class Player extends Thread {
                     }
                 }
 
-                Thread.sleep(100); // Actualizar cada 100ms
+                Thread.sleep(100);
 
             } catch (InterruptedException e) {
                 System.out.println("Hilo de jugador interrumpido");
@@ -103,8 +92,6 @@ public class Player extends Thread {
     public void setPausado(boolean pausado) {
         this.pausado = pausado;
     }
-
-    // ========== GETTERS Y SETTERS ==========
 
     public int getX() {
         return x;

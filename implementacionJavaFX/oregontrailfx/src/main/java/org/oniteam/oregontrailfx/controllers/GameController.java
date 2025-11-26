@@ -62,16 +62,16 @@ public class GameController {
     }
 
     private void loadSprites() {
-        System.out.println("🎨 Cargando sprites...");
+        System.out.println("Cargando sprites");
 
         try {
-            // Cargar sprites del jugador (idle)
+            // idle
             heroIdle = new Image[4];
             for (int i = 0; i < 4; i++) {
                 heroIdle[i] = cargarImagen("/images/hero/idle/hero-idle-0" + i + ".png");
             }
 
-            // Cargar sprites del jugador (corriendo)
+            // corriendo
             heroRun = new Image[6];
             for (int i = 0; i < 6; i++) {
                 heroRun[i] = cargarImagen("/images/hero/run/hero-run-0" + i + ".png");
@@ -85,10 +85,10 @@ public class GameController {
             // Cargar enemigo
             enemyImg = cargarImagen("/images/enemy/enemy.png");
 
-            System.out.println("✅ Sprites cargados correctamente");
+            System.out.println("Sprites cargados correctamente");
 
         } catch (Exception e) {
-            System.err.println("❌ Error cargando sprites: " + e.getMessage());
+            System.err.println("Error cargando sprites: " + e.getMessage());
             e.printStackTrace();
             crearImagenesPlaceholder();
         }
@@ -102,12 +102,12 @@ public class GameController {
         try {
             var stream = getClass().getResourceAsStream(ruta);
             if (stream == null) {
-                System.err.println("⚠️ Imagen no encontrada: " + ruta);
+                System.err.println("Imagen no encontrada: " + ruta);
                 return crearImagenPlaceholder();
             }
             return new Image(stream);
         } catch (Exception e) {
-            System.err.println("⚠️ Error cargando: " + ruta);
+            System.err.println("Error cargando: " + ruta);
             return crearImagenPlaceholder();
         }
     }
@@ -116,11 +116,9 @@ public class GameController {
      * Crea una imagen placeholder de color sólido.
      */
     private Image crearImagenPlaceholder() {
-        // Crear imagen temporal de 32x32 píxeles
         javafx.scene.image.WritableImage img = new javafx.scene.image.WritableImage(32, 32);
         javafx.scene.image.PixelWriter pw = img.getPixelWriter();
 
-        // Pintar de azul
         for (int x = 0; x < 32; x++) {
             for (int y = 0; y < 32; y++) {
                 pw.setColor(x, y, javafx.scene.paint.Color.LIGHTBLUE);
@@ -134,7 +132,7 @@ public class GameController {
      * Crea imágenes placeholder para todo si fallan las cargas.
      */
     private void crearImagenesPlaceholder() {
-        System.out.println("🎨 Usando imágenes placeholder...");
+        System.out.println("Usando imágenes placeholder...");
 
         Image placeholder = crearImagenPlaceholder();
 
@@ -237,7 +235,7 @@ public class GameController {
         if (left) movementController.moveLeft();
         if (right) movementController.moveRight();
 
-        // Disparo (simplificado)
+        // Disparo
         if (shooting && ammoManager.hasAmmo("rifle")) {
             ammoManager.shoot("rifle");
             // Aquí podrías agregar lógica de colisión con enemigos
@@ -275,13 +273,13 @@ public class GameController {
     }
 
     private void updateHUD() {
-        lblHealth.setText("❤ Vida: " + player.getVida());
-        lblAmmo.setText("🔫 Balas: " + ammoManager.getRifleAmmo());
-        lblScenario.setText("📍 " + currentScenario.getType().name());
+        lblHealth.setText("Vida: " + player.getVida());
+        lblAmmo.setText("Balas: " + ammoManager.getRifleAmmo());
+        lblScenario.setText("Ubicación: " + currentScenario.getType().name());
 
         // Resumen de inventario
         int itemCount = inventory.size();
-        lblInventorySummary.setText("🎒 Items: " + itemCount + "/" + 20);
+        lblInventorySummary.setText("Items: " + itemCount + "/" + 20);
     }
 
     private void render() {

@@ -50,10 +50,6 @@ public class TreeAchivement {
         }
     }
 
-    /**
-     * ✅ FIX: Inserta un logro en el árbol de TODOS los logros disponibles.
-     * Ahora usa insertInAllAchivementRecursive() en vez de insert().
-     */
     public void insertInAllAchivement(NodeAchivement node){
         if(rootAllAchivements == null){
             rootAllAchivements = node;
@@ -62,10 +58,6 @@ public class TreeAchivement {
         }
     }
 
-    /**
-     * ✅ FIX: Método auxiliar recursivo para insertar en rootAllAchivements.
-     * Antes llamaba a insert() que insertaba en rootPlayer (BUG).
-     */
     private void insertInAllAchivementRecursive(NodeAchivement current, NodeAchivement node){
         if (current.getValue().compareTo(node.getValue()) > 0){
             if(current.getLeft() == null){

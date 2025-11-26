@@ -14,7 +14,7 @@ public class Spawner {
         this.densidadMax = densidadMax;
         this.radioSeguro = radioSeguro;
         this.random = new Random();
-        this.enemies = new ListEnemy(); // ✅ FIX: Inicializar lista de enemigos
+        this.enemies = new ListEnemy();
     }
 
     public ListEnemy getEnemies() {
@@ -73,7 +73,7 @@ public class Spawner {
     private SpawnPos findValidPosition(Scenario map, Player player) {
         int intentos = 30;
         int width = map.getBoard().length;
-        int height = map.getBoard()[0].length; // ✅ FIX: usar [0] para altura
+        int height = map.getBoard()[0].length;
 
         for (int i = 0; i < intentos; i++) {
             int x = random.nextInt(width);

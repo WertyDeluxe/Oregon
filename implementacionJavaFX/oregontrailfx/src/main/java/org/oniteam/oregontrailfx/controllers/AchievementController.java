@@ -34,6 +34,7 @@ public class AchievementController implements Initializable {
     }
 
     /**
+     * Metodo cargarLogros()
      * Carga el árbol de logros desde OregonTrail.
      */
     private void cargarLogros() {
@@ -44,6 +45,7 @@ public class AchievementController implements Initializable {
     }
 
     /**
+     * Metodo mostrarLogros()
      * Muestra los logros en los TextArea usando recorrido InOrder.
      */
     private void mostrarLogros() {
@@ -59,7 +61,6 @@ public class AchievementController implements Initializable {
         String todosLogros = treeAchivement.inordenRootAllAchivements();
         txtTodosLosLogros.setText(formatearLogros(todosLogros));
 
-        // Estadísticas
         int desbloqueados = treeAchivement.countPlayerAchivements();
         int totales = treeAchivement.countAllAchivements();
         double porcentaje = totales > 0 ? (desbloqueados * 100.0 / totales) : 0;
@@ -71,6 +72,9 @@ public class AchievementController implements Initializable {
     }
 
     /**
+     * Metodo formatearLogros
+     * @param logrosRaw
+     * @return String toString
      * Formatea la salida del recorrido InOrder para mejor legibilidad.
      */
     private String formatearLogros(String logrosRaw) {
@@ -78,7 +82,6 @@ public class AchievementController implements Initializable {
             return "No hay logros disponibles";
         }
 
-        // Separar por " | " que es el formato del toString() de Achivement
         String[] logros = logrosRaw.split("\\|");
         StringBuilder sb = new StringBuilder();
 
@@ -92,17 +95,17 @@ public class AchievementController implements Initializable {
     }
 
     /**
+     * Metodo handleSimularLogro()
      * Simula desbloquear un logro (para testing).
-     * En el juego real, esto se llamaría cuando se cumple una condición.
      */
     @FXML
     private void handleSimularLogro() {
-        // Desbloquear el logro de dificultad 1 (Primer Paso)
         oregonTrail.unlockAchivement(1);
         mostrarLogros();
     }
 
     /**
+     * Metodo handleCerrar()
      * Cierra la ventana del árbol de logros.
      */
     @FXML
@@ -112,6 +115,7 @@ public class AchievementController implements Initializable {
     }
 
     /**
+     * Metodo handleActualizar()
      * Actualiza la visualización del árbol.
      */
     @FXML
@@ -120,6 +124,8 @@ public class AchievementController implements Initializable {
     }
 
     /**
+     * Metodo exportarLogros()
+     * @return String treeAchivement
      * Exporta los logros a un String (útil para guardado).
      */
     public String exportarLogros() {

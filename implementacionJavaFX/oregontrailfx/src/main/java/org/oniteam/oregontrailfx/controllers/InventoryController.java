@@ -100,7 +100,7 @@ public class InventoryController implements Initializable {
 
         if (player != null) {
             lblEstadoJugador.setText(String.format(
-                    "❤ Vida: %d | 💰 Dinero: $%.0f",
+                    "Vida: %d | Dinero: $%.0f",
                     player.getVida(),
                     player.getDinero()
             ));

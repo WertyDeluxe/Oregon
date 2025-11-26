@@ -31,8 +31,6 @@ public class Caravana {
         this.comida = Math.max(0, comidaInicial);
     }
 
-    // ========== GESTIÓN DE MIEMBROS ==========
-
     /**
      * Agrega un miembro a la caravana.
      *
@@ -274,7 +272,6 @@ public class Caravana {
         }
     }
 
-    // ========== UTILIDADES ==========
 
     /**
      * Obtiene un resumen del estado de la caravana.

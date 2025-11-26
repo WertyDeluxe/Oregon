@@ -41,8 +41,8 @@ public class GeminiService {
      */
     public String generarTexto(String prompt) {
         if (!config.isGeminiConfigured()) {
-            return "⚠️ API Key de Gemini no configurada. " +
-                    "Por favor configura tu API key en config.properties";
+            return "API Key de Gemini no configurada. " +
+                    "Por favor configura tu API";
         }
 
         try {
@@ -72,7 +72,7 @@ public class GeminiService {
                 return leerRespuesta(conn);
             } else {
                 String errorMsg = leerError(conn);
-                System.err.println("❌ Error en Gemini API: " + errorMsg);
+                System.err.println("Error en Gemini API: " + errorMsg);
                 return "Error al generar diálogo (código: " + responseCode + ")";
             }
 
@@ -138,7 +138,6 @@ public class GeminiService {
 
     /**
      * Extrae el texto generado del JSON de respuesta.
-     * Implementación simplificada sin librerías JSON.
      */
     private String extraerTextoDeJson(String json) {
         try {
@@ -184,8 +183,6 @@ public class GeminiService {
                 .replace("\\\\", "\\")
                 .replace("\\t", "\t");
     }
-
-    // ===== MÉTODOS ESPECÍFICOS DEL JUEGO =====
 
     /**
      * Genera diálogo de un enemigo al morir.
@@ -244,18 +241,5 @@ public class GeminiService {
      */
     public boolean isConfigured() {
         return config.isGeminiConfigured();
-    }
-
-    /**
-     * Obtiene mensaje de ayuda sobre configuración.
-     */
-    public String getMensajeConfiguracion() {
-        return """
-               Para usar Gemini API:
-               1. Ve a https://aistudio.google.com/app/apikey
-               2. Crea una API Key
-               3. Pégala en src/main/resources/config.properties
-               4. Reemplaza 'TU_API_KEY_AQUI' con tu clave real
-               """;
     }
 }

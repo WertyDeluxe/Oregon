@@ -35,7 +35,7 @@ public class EnemyController implements Initializable {
 
         // Verificar configuración de Gemini
         if (!geminiService.isConfigured()) {
-            txtDialogo.setText("⚠️ Gemini API no configurada\n\n" +
+            txtDialogo.setText("Error en la API\n\n" +
                     geminiService.getMensajeConfiguracion());
         }
     }
@@ -64,7 +64,7 @@ public class EnemyController implements Initializable {
     }
 
     /**
-     * Genera un diálogo usando Gemini API cuando se elimina un enemigo.
+     * Genera un diálogo usando Gemini
      */
     @FXML
     private void handleEliminarEnemigo() {
@@ -73,18 +73,17 @@ public class EnemyController implements Initializable {
             return;
         }
 
-        lblEstado.setText("⏳ Generando diálogo con Gemini...");
+        lblEstado.setText("Generando diálogo con Gemini...");
 
-        // Generar diálogo en un hilo separado
         new Thread(() -> {
             String dialogo = geminiService.dialogoEnemigoDerrotado("bandido armado");
 
             javafx.application.Platform.runLater(() -> {
                 txtDialogo.setText(
-                        "💀 ENEMIGO ELIMINADO\n" +
-                                "━━━━━━━━━━━━━━━━━━━━━━━━\n" +
+                        "ENEMIGO ELIMINADO\n" +
+                                "--------------------------\n" +
                                 "Posición: (" + currentEnemy.getX() + ", " + currentEnemy.getY() + ")\n\n" +
-                                "💬 Últimas palabras:\n" +
+                                "Últimas palabras:\n" +
                                 "\"" + dialogo + "\""
                 );
 
@@ -93,7 +92,7 @@ public class EnemyController implements Initializable {
                 currentEnemy = (next != null) ? next.getData() : null;
 
                 mostrarEnemigoActual();
-                lblEstado.setText("✅ Enemigo eliminado - " + enemies.contEnemies() + " restantes");
+                lblEstado.setText("Enemigo eliminado - " + enemies.contEnemies() + " restantes");
             });
         }).start();
     }
@@ -103,18 +102,17 @@ public class EnemyController implements Initializable {
      */
     @FXML
     private void handleDialogoAmigable() {
-        lblEstado.setText("⏳ Generando diálogo con Gemini...");
+        lblEstado.setText("Generando diálogo con Gemini...");
 
         new Thread(() -> {
             String dialogo = geminiService.dialogoNPCAmigable();
 
             javafx.application.Platform.runLater(() -> {
                 txtDialogo.setText(
-                        "🤠 VIAJERO ENCONTRADO\n" +
-                                "━━━━━━━━━━━━━━━━━━━━━━━━\n\n" +
-                                "💬 " + dialogo
+                        "VIAJERO ENCONTRADO\n" +
+                                "--------------------\n\n" + dialogo
                 );
-                lblEstado.setText("✅ Diálogo generado");
+                lblEstado.setText("Diálogo generado");
             });
         }).start();
     }
@@ -124,18 +122,17 @@ public class EnemyController implements Initializable {
      */
     @FXML
     private void handleDialogoComerciante() {
-        lblEstado.setText("⏳ Generando diálogo con Gemini...");
+        lblEstado.setText("Generando diálogo con Gemini...");
 
         new Thread(() -> {
             String dialogo = geminiService.dialogoComerciante();
 
             javafx.application.Platform.runLater(() -> {
                 txtDialogo.setText(
-                        "🏪 COMERCIANTE\n" +
-                                "━━━━━━━━━━━━━━━━━━━━━━━━\n\n" +
-                                "💬 " + dialogo
+                        "COMERCIANTE\n" +
+                                "-------------------------\n\n" + dialogo
                 );
-                lblEstado.setText("✅ Diálogo generado");
+                lblEstado.setText("Diálogo generado");
             });
         }).start();
     }
@@ -145,7 +142,7 @@ public class EnemyController implements Initializable {
      */
     @FXML
     private void handleEventoAleatorio() {
-        lblEstado.setText("⏳ Generando evento con Gemini...");
+        lblEstado.setText("Generando evento con Gemini...");
 
         String[] eventos = {"tormenta", "río desbordado", "encuentro con nativos", "enfermedad"};
         String eventoAleatorio = eventos[(int)(Math.random() * eventos.length)];
@@ -155,11 +152,10 @@ public class EnemyController implements Initializable {
 
             javafx.application.Platform.runLater(() -> {
                 txtDialogo.setText(
-                        "⚠️ EVENTO ALEATORIO\n" +
-                                "━━━━━━━━━━━━━━━━━━━━━━━━\n\n" +
-                                "📜 " + dialogo
+                        "EVENTO ALEATORIO\n" +
+                                "---------------------\n\n" + dialogo
                 );
-                lblEstado.setText("✅ Evento generado");
+                lblEstado.setText("Evento generado");
             });
         }).start();
     }
@@ -173,12 +169,12 @@ public class EnemyController implements Initializable {
         String lista = enemies.printList();
 
         txtDialogo.setText(
-                "📊 ESTADÍSTICAS DE ENEMIGOS\n" +
-                        "━━━━━━━━━━━━━━━━━━━━━━━━\n\n" +
+                "ESTADÍSTICAS DE ENEMIGOS\n" +
+                        "-----------------------\n\n" +
                         "Total de enemigos activos: " + total + "\n\n" +
                         "Lista de tipos: " + (lista.isEmpty() ? "Ninguno" : lista)
         );
-        lblEstado.setText("📊 Estadísticas mostradas");
+        lblEstado.setText("Estadísticas mostradas");
     }
 
     @FXML
@@ -187,18 +183,16 @@ public class EnemyController implements Initializable {
         stage.close();
     }
 
-    /**
-     * Método para testing sin API key (diálogo simulado).
-     */
+
     @FXML
     private void handleDialogoSimulado() {
         txtDialogo.setText(
-                "💀 ENEMIGO ELIMINADO (Simulado)\n" +
-                        "━━━━━━━━━━━━━━━━━━━━━━━━\n\n" +
-                        "💬 Últimas palabras:\n" +
+                "ENEMIGO ELIMINADO (Simulado)\n" +
+                        "--------------------------\n\n" +
+                        "Últimas palabras:\n" +
                         "\"El sendero a Oregón... es demasiado largo...\n" +
                         "Jamás llegarán... jamás...\""
         );
-        lblEstado.setText("🎭 Diálogo simulado (sin API)");
+        lblEstado.setText("Diálogo simulado");
     }
 }
